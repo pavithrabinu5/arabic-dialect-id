@@ -133,7 +133,14 @@ of the Tunisiya corpus of Tunisian Arabic.""")
 s = s.replace("""    - {type: f1, name: macro F1, value: 0.7511}""", f"""    - {{type: f1, name: macro F1, value: 0.7511}}
     - {{type: accuracy, name: accuracy (train overlap removed), value: {D['accuracy']:.4f}}}
     - {{type: f1, name: macro F1 (train overlap removed), value: {D['macro_f1']:.4f}}}""")
+s = s.replace("""This is a learning / practice project (HF NeurIPS 2026 ML Intern Reproductions hackathon prep).""",
+"""This is a learning / practice project (HF NeurIPS 2026 ML Intern Reproductions hackathon prep).
+
+**Code:** training, error-analysis and demo sources are on GitHub at
+[pavithrabinu5/arabic-dialect-id](https://github.com/pavithrabinu5/arabic-dialect-id) (MIT license).
+The model weights are released under CC-BY-4.0, following the dataset.""")
 assert "train overlap removed" in s.split("---")[1], "model-index not updated"
+assert "github.com/pavithrabinu5/arabic-dialect-id" in s, "repo link not added"
 assert "Which dialects get confused" in s and "16,494" in s and "Tunisiya" in s
 open("card/README.md", "w").write(s)
 print("ok", len(s))

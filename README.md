@@ -138,6 +138,11 @@ mostly Tunisian; dialects not in the label set (e.g. Iraqi, Sudanese, Yemeni) an
 sentences are often genuinely ambiguous. Do not use for decisions about people (e.g. inferring nationality or origin).
 See the model card for details.
 
+## License
+
+Code in this repository is released under the [MIT License](LICENSE). The published model weights are CC-BY-4.0, following
+the dataset's license.
+
 ## Citation
 
 ```bibtex

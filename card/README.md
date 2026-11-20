@@ -34,6 +34,10 @@ Classifies an Arabic sentence into one of five varieties: **EGY** (Egyptian), **
 
 This is a learning / practice project (HF NeurIPS 2026 ML Intern Reproductions hackathon prep).
 
+**Code:** training, error-analysis and demo sources are on GitHub at
+[pavithrabinu5/arabic-dialect-id](https://github.com/pavithrabinu5/arabic-dialect-id) (MIT license).
+The model weights are released under CC-BY-4.0, following the dataset.
+
 ## Quick start
 ```python
 from transformers import pipeline
