@@ -1,0 +1,285 @@
+{
+  "n_test": 1013,
+  "errors": 200,
+  "labels": [
+    "EGY",
+    "GLF",
+    "LAV",
+    "MSA",
+    "NOR"
+  ],
+  "pairs": [
+    {
+      "a": "GLF",
+      "b": "LAV",
+      "total": 65,
+      "a_as_b": 28,
+      "b_as_a": 37
+    },
+    {
+      "a": "GLF",
+      "b": "NOR",
+      "total": 50,
+      "a_as_b": 23,
+      "b_as_a": 27
+    },
+    {
+      "a": "LAV",
+      "b": "NOR",
+      "total": 49,
+      "a_as_b": 26,
+      "b_as_a": 23
+    },
+    {
+      "a": "LAV",
+      "b": "MSA",
+      "total": 17,
+      "a_as_b": 14,
+      "b_as_a": 3
+    },
+    {
+      "a": "GLF",
+      "b": "MSA",
+      "total": 9,
+      "a_as_b": 7,
+      "b_as_a": 2
+    },
+    {
+      "a": "MSA",
+      "b": "NOR",
+      "total": 4,
+      "a_as_b": 1,
+      "b_as_a": 3
+    },
+    {
+      "a": "EGY",
+      "b": "NOR",
+      "total": 3,
+      "a_as_b": 0,
+      "b_as_a": 3
+    },
+    {
+      "a": "EGY",
+      "b": "GLF",
+      "total": 2,
+      "a_as_b": 1,
+      "b_as_a": 1
+    },
+    {
+      "a": "EGY",
+      "b": "LAV",
+      "total": 1,
+      "a_as_b": 1,
+      "b_as_a": 0
+    },
+    {
+      "a": "EGY",
+      "b": "MSA",
+      "total": 0,
+      "a_as_b": 0,
+      "b_as_a": 0
+    }
+  ],
+  "most_confused_with": {
+    "EGY": {
+      "label": "LAV",
+      "count": 1,
+      "share_of_class": 0.002
+    },
+    "GLF": {
+      "label": "LAV",
+      "count": 28,
+      "share_of_class": 0.167
+    },
+    "LAV": {
+      "label": "GLF",
+      "count": 37,
+      "share_of_class": 0.21
+    },
+    "MSA": {
+      "label": "LAV",
+      "count": 3,
+      "share_of_class": 0.03
+    },
+    "NOR": {
+      "label": "GLF",
+      "count": 27,
+      "share_of_class": 0.167
+    }
+  },
+  "triangle_GLF_LAV_NOR_errors": 164,
+  "errors_under_10_words": 100,
+  "median_words_non_egy": {
+    "correct": 28.5,
+    "wrong": 10.0
+  },
+  "accuracy_by_length": [
+    {
+      "words": "1-4",
+      "n_all": 122,
+      "acc_all": 0.5,
+      "n_non_egy": 95,
+      "acc_non_egy": 0.368
+    },
+    {
+      "words": "5-9",
+      "n_all": 172,
+      "acc_all": 0.773,
+      "n_non_egy": 83,
+      "acc_non_egy": 0.542
+    },
+    {
+      "words": "10-19",
+      "n_all": 215,
+      "acc_all": 0.819,
+      "n_non_egy": 105,
+      "acc_non_egy": 0.629
+    },
+    {
+      "words": "20+",
+      "n_all": 504,
+      "acc_all": 0.879,
+      "n_non_egy": 323,
+      "acc_non_egy": 0.811
+    }
+  ],
+  "confidence": {
+    "mean_correct": 0.914,
+    "mean_wrong": 0.621,
+    "thresholds": [
+      {
+        "min_conf": 0.5,
+        "coverage": 0.892,
+        "accuracy": 0.856
+      },
+      {
+        "min_conf": 0.7,
+        "coverage": 0.78,
+        "accuracy": 0.904
+      },
+      {
+        "min_conf": 0.9,
+        "coverage": 0.656,
+        "accuracy": 0.97
+      }
+    ]
+  },
+  "marker_doc_freq_pct_train": {
+    "ايه": {
+      "EGY": 11.0,
+      "GLF": 0.0,
+      "LAV": 0.0,
+      "MSA": 0.0,
+      "NOR": 0.0
+    },
+    "عايز": {
+      "EGY": 3.2,
+      "GLF": 0.1,
+      "LAV": 0.2,
+      "MSA": 0.1,
+      "NOR": 0.2
+    },
+    "مش": {
+      "EGY": 23.4,
+      "GLF": 3.1,
+      "LAV": 6.8,
+      "MSA": 0.6,
+      "NOR": 11.3
+    },
+    "شو": {
+      "EGY": 0.2,
+      "GLF": 1.7,
+      "LAV": 4.6,
+      "MSA": 0.1,
+      "NOR": 2.7
+    },
+    "هيك": {
+      "EGY": 0.0,
+      "GLF": 0.7,
+      "LAV": 5.8,
+      "MSA": 0.0,
+      "NOR": 1.2
+    },
+    "بدي": {
+      "EGY": 0.0,
+      "GLF": 0.2,
+      "LAV": 3.8,
+      "MSA": 0.1,
+      "NOR": 0.8
+    },
+    "برشا": {
+      "EGY": 0.0,
+      "GLF": 0.0,
+      "LAV": 0.0,
+      "MSA": 0.0,
+      "NOR": 1.2
+    },
+    "الحين": {
+      "EGY": 0.0,
+      "GLF": 1.1,
+      "LAV": 0.2,
+      "MSA": 0.0,
+      "NOR": 0.2
+    },
+    "يعني": {
+      "EGY": 3.0,
+      "GLF": 30.1,
+      "LAV": 28.7,
+      "MSA": 14.0,
+      "NOR": 19.3
+    },
+    "اللي": {
+      "EGY": 9.2,
+      "GLF": 19.6,
+      "LAV": 17.3,
+      "MSA": 1.4,
+      "NOR": 17.1
+    }
+  },
+  "label_noise": {
+    "train_sentences_with_multiple_labels": 30,
+    "test_sentences_in_train": 28,
+    "test_in_train_label_conflict": 7
+  },
+  "overlap_removed": {
+    "definition": "test sentence equals a train sentence after normalization (diacritics/tatweel removed, alef/ya/ta-marbuta unified, punctuation removed, letters repeated 3+ times collapsed)",
+    "checks": {
+      "exact": 28,
+      "normalized_exact": 29,
+      "fuzzy_cos_ge_0.9_beyond_normalized": 1,
+      "fuzzy_cos_ge_0.8_beyond_normalized": 6,
+      "fuzzy_cos_ge_0.8_beyond_normalized_5plus_words": 0,
+      "test_contained_in_train_5plus_words": 0
+    },
+    "n_removed": 29,
+    "n_kept": 984,
+    "removed_by_dialect": {
+      "EGY": 22,
+      "GLF": 0,
+      "LAV": 6,
+      "MSA": 0,
+      "NOR": 1
+    },
+    "full": {
+      "accuracy": 0.8026,
+      "macro_f1": 0.7511
+    },
+    "deduplicated": {
+      "accuracy": 0.8008,
+      "macro_f1": 0.7526,
+      "per_class_f1": {
+        "EGY": 0.9922,
+        "GLF": 0.6356,
+        "LAV": 0.6,
+        "MSA": 0.8624,
+        "NOR": 0.673
+      }
+    },
+    "on_overlap_only": {
+      "accuracy": 0.8621,
+      "label_conflict_with_train": 7,
+      "median_words": 7.0
+    },
+    "dev_sentences_in_train": 29
+  }
+}

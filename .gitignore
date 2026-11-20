@@ -1,0 +1,46 @@
+# Python / virtualenvs
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+
+# Model checkpoints and weights (these live on the Hugging Face Hub)
+out/
+checkpoint-*/
+*.safetensors
+*.bin
+*.pt
+*.pth
+*.ckpt
+*.onnx
+onnx_export/
+
+# Hugging Face / Trackio caches and local downloads
+.cache/
+**/.cache/
+huggingface/
+trackio/
+data_peek/
+repo_card/
+
+# Logs (contain local machine paths)
+*.log
+
+# Secrets and tokens
+.env
+.env.*
+*.token
+token
+token.txt
+*_token*
+.huggingface/
+.netrc
+*.pem
+*.key
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/

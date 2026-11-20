@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Arabic Dialect ID</title>
+<style>
+:root{--bg:#f7f7f5;--card:#fff;--ink:#1d1d1b;--muted:#6b6b66;--line:#e4e3de;--accent:#0f7b6c;--accent-soft:#d8efe9;--bar:#c9e7df;--warn:#8a5a00}
+@media (prefers-color-scheme:dark){:root{--bg:#121413;--card:#1b1e1d;--ink:#ecece8;--muted:#a0a39e;--line:#2c302e;--accent:#4cc3ad;--accent-soft:#1d3833;--bar:#24463f;--warn:#e0b45a}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans Arabic",sans-serif}
+main{max-width:920px;margin:0 auto;padding:24px 16px 48px}
+h1{font-size:1.6rem;margin:0 0 4px} h2{font-size:1.1rem;margin:24px 0 8px}
+.sub{color:var(--muted);margin:0 0 16px} a{color:var(--accent)}
+.stats{display:flex;gap:12px;flex-wrap:wrap;margin:12px 0 20px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 14px;min-width:130px}
+.stat b{display:block;font-size:1.4rem;font-variant-numeric:tabular-nums} .stat span{color:var(--muted);font-size:.85rem}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:16px}
+.tabs button{background:none;border:0;border-bottom:2px solid transparent;padding:8px 14px;font:inherit;color:var(--muted);cursor:pointer}
+.tabs button[aria-selected=true]{color:var(--ink);border-color:var(--accent);font-weight:600}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px} @media (max-width:700px){.grid{grid-template-columns:1fr}}
+textarea{width:100%;min-height:96px;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font-family:inherit;font-size:1.1rem;line-height:1.6;resize:vertical}
+.btn{margin-top:8px;background:var(--accent);color:#fff;border:0;border-radius:8px;padding:9px 18px;font:inherit;font-weight:600;cursor:pointer}
+.btn:disabled{opacity:.5;cursor:wait}
+.ex{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.ex button{background:var(--accent-soft);color:var(--ink);border:0;border-radius:999px;padding:4px 12px;font:inherit;font-size:.95rem;cursor:pointer}
+.row{margin:8px 0} .row .lbl{display:flex;justify-content:space-between;font-size:.95rem}
+.track{height:10px;background:var(--line);border-radius:5px;overflow:hidden;margin-top:3px}
+.fill{height:100%;background:var(--bar);transition:width .3s} .top .fill{background:var(--accent)} .top .lbl{font-weight:600}
+#status{color:var(--muted);font-size:.9rem;margin-top:8px} .warn{color:var(--warn);font-size:.9rem;margin-top:12px}
+table{border-collapse:collapse;width:100%;font-size:.92rem;font-variant-numeric:tabular-nums}
+th,td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:right} th:first-child,td:first-child{text-align:left}
+.scroll{overflow-x:auto} svg text{fill:var(--muted);font-size:11px}
+.legend{display:flex;gap:14px;font-size:.85rem;color:var(--muted);margin-top:4px}
+.sw{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+.cmc{min-width:64px} .cmc small{display:block;color:var(--muted);font-size:.75rem}
+.why{display:grid;gap:12px} .why .card p{margin:.3em 0} .why h3{margin:0 0 4px;font-size:1rem}
+.ar{font-size:1.05rem}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<main>
+  <h1>🗣️ Arabic Dialect ID</h1>
+  <p class="sub">AraBERT v0.2 fine-tuned to tell apart Egyptian, Gulf, Levantine, North African and Modern Standard Arabic.
+  Runs entirely in your browser with Transformers.js. ·
+  <a href="https://huggingface.co/pavithrabinu115/arabert-arabic-dialect-id">Model card</a> ·
+  <a href="https://huggingface.co/spaces/pavithrabinu115/trackio-dashboard">Trackio dashboard</a></p>
+  <div class="stats" id="stats"></div>
+  <div class="tabs" role="tablist">
+    <button role="tab" aria-selected="true" data-tab="try">Try it</button>
+    <button role="tab" aria-selected="false" data-tab="metrics">Training metrics</button>
+  </div>
+
+  <section id="try" class="grid">
+    <div class="card">
+      <label for="txt"><b>Arabic text</b></label>
+      <textarea id="txt" dir="rtl" placeholder="اكتب جملة هنا..."></textarea>
+      <button class="btn" id="go" disabled>Classify</button>
+      <div id="status">Loading model (136 MB, cached after the first visit)…</div>
+      <div class="ex" id="ex" dir="rtl"></div>
+    </div>
+    <div class="card">
+      <b>Predicted dialect</b>
+      <div id="out"><p class="sub">Type a sentence or pick an example.</p></div>
+      <p class="warn">⚠️ Short or mixed sentences are often genuinely ambiguous. See Limitations in the model card.</p>
+    </div>
+  </section>
+
+  <section id="metrics" hidden>
+    <p class="sub">Logged with Trackio during training (3 epochs on an Apple M4). Full interactive dashboard:
+      <a href="https://huggingface.co/spaces/pavithrabinu115/trackio-dashboard">trackio-dashboard</a>.</p>
+    <div class="grid">
+      <div class="card"><b>Training loss</b><div id="lossChart"></div></div>
+      <div class="card"><b>Dev metrics per epoch</b><div id="evalChart"></div>
+        <div class="legend"><span><i class="sw" style="background:var(--accent)"></i>accuracy</span><span><i class="sw" style="background:var(--warn)"></i>macro-F1</span></div></div>
+    </div>
+    <h2>Per-dialect results (test split, sorted by F1)</h2>
+    <div class="card scroll"><table id="cls"></table></div>
+    <h2>Confusion matrix (test)</h2>
+    <p class="sub">Rows are the true dialect, columns the prediction. Off-diagonal cells are shaded by the share of the row that went there.</p>
+    <div class="card scroll"><table id="cm"></table></div>
+    <h2>Which dialects get confused, and why</h2>
+    <div class="why" id="why"></div>
+    <p class="sub">Full analysis with marker-word statistics: <a href="https://huggingface.co/pavithrabinu115/arabert-arabic-dialect-id#which-dialects-get-confused-and-why">model card</a> ·
+      <a href="https://huggingface.co/pavithrabinu115/arabert-arabic-dialect-id/blob/main/error_analysis.json">error_analysis.json</a></p>
+  </section>
+</main>
+
+<script type="module">
+const M = {"train": [{"step": 20, "loss": 1.4582}, {"step": 40, "loss": 1.0752}, {"step": 60, "loss": 1.0836}, {"step": 80, "loss": 0.72}, {"step": 100, "loss": 0.8686}, {"step": 120, "loss": 0.549}, {"step": 140, "loss": 0.5434}, {"step": 160, "loss": 0.6973}, {"step": 180, "loss": 0.4231}, {"step": 200, "loss": 0.6988}, {"step": 220, "loss": 0.3459}, {"step": 240, "loss": 0.5179}, {"step": 260, "loss": 0.6375}, {"step": 280, "loss": 0.3245}, {"step": 300, "loss": 0.4796}, {"step": 320, "loss": 0.41}, {"step": 340, "loss": 0.3571}, {"step": 360, "loss": 0.5636}, {"step": 380, "loss": 0.2692}, {"step": 400, "loss": 0.5361}, {"step": 420, "loss": 0.3713}, {"step": 440, "loss": 0.3856}, {"step": 460, "loss": 0.469}, {"step": 480, "loss": 0.2791}, {"step": 500, "loss": 0.4417}, {"step": 520, "loss": 0.3299}, {"step": 540, "loss": 0.2296}, {"step": 560, "loss": 0.4809}, {"step": 580, "loss": 0.2213}, {"step": 600, "loss": 0.2836}, {"step": 620, "loss": 0.357}, {"step": 640, "loss": 0.2861}, {"step": 660, "loss": 0.3895}, {"step": 680, "loss": 0.1747}, {"step": 700, "loss": 0.2966}, {"step": 720, "loss": 0.3435}, {"step": 740, "loss": 0.1887}], "eval": [{"step": 253, "epoch": 1.0, "acc": 0.7713, "f1": 0.7054}, {"step": 506, "epoch": 2.0, "acc": 0.8079, "f1": 0.7485}, {"step": 759, "epoch": 3.0, "acc": 0.8277, "f1": 0.781}, {"step": 759, "epoch": 3.0, "acc": 0.8277, "f1": 0.781}], "test": {"test_accuracy": 0.8025666337611056, "test_macro_f1": 0.7510839953647344}, "labels": ["EGY", "GLF", "LAV", "MSA", "NOR"], "cm": [[405, 1, 1, 0, 0], [1, 109, 28, 7, 23], [0, 37, 99, 14, 26], [0, 2, 3, 94, 1], [3, 27, 23, 3, 106]], "report": {"EGY": {"precision": 0.9902200488997555, "recall": 0.995085995085995, "f1-score": 0.9926470588235294, "support": 407.0}, "GLF": {"precision": 0.6193181818181818, "recall": 0.6488095238095238, "f1-score": 0.6337209302325582, "support": 168.0}, "LAV": {"precision": 0.6428571428571429, "recall": 0.5625, "f1-score": 0.6, "support": 176.0}, "MSA": {"precision": 0.7966101694915254, "recall": 0.94, "f1-score": 0.8623853211009175, "support": 100.0}, "NOR": {"precision": 0.6794871794871795, "recall": 0.654320987654321, "f1-score": 0.6666666666666666, "support": 162.0}}, "analysis": {"n_test": 1013, "errors": 200, "labels": ["EGY", "GLF", "LAV", "MSA", "NOR"], "pairs": [{"a": "GLF", "b": "LAV", "total": 65, "a_as_b": 28, "b_as_a": 37}, {"a": "GLF", "b": "NOR", "total": 50, "a_as_b": 23, "b_as_a": 27}, {"a": "LAV", "b": "NOR", "total": 49, "a_as_b": 26, "b_as_a": 23}, {"a": "LAV", "b": "MSA", "total": 17, "a_as_b": 14, "b_as_a": 3}, {"a": "GLF", "b": "MSA", "total": 9, "a_as_b": 7, "b_as_a": 2}, {"a": "MSA", "b": "NOR", "total": 4, "a_as_b": 1, "b_as_a": 3}, {"a": "EGY", "b": "NOR", "total": 3, "a_as_b": 0, "b_as_a": 3}, {"a": "EGY", "b": "GLF", "total": 2, "a_as_b": 1, "b_as_a": 1}, {"a": "EGY", "b": "LAV", "total": 1, "a_as_b": 1, "b_as_a": 0}, {"a": "EGY", "b": "MSA", "total": 0, "a_as_b": 0, "b_as_a": 0}], "most_confused_with": {"EGY": {"label": "LAV", "count": 1, "share_of_class": 0.002}, "GLF": {"label": "LAV", "count": 28, "share_of_class": 0.167}, "LAV": {"label": "GLF", "count": 37, "share_of_class": 0.21}, "MSA": {"label": "LAV", "count": 3, "share_of_class": 0.03}, "NOR": {"label": "GLF", "count": 27, "share_of_class": 0.167}}, "triangle_GLF_LAV_NOR_errors": 164, "errors_under_10_words": 100, "median_words_non_egy": {"correct": 28.5, "wrong": 10.0}, "accuracy_by_length": [{"words": "1-4", "n_all": 122, "acc_all": 0.5, "n_non_egy": 95, "acc_non_egy": 0.368}, {"words": "5-9", "n_all": 172, "acc_all": 0.773, "n_non_egy": 83, "acc_non_egy": 0.542}, {"words": "10-19", "n_all": 215, "acc_all": 0.819, "n_non_egy": 105, "acc_non_egy": 0.629}, {"words": "20+", "n_all": 504, "acc_all": 0.879, "n_non_egy": 323, "acc_non_egy": 0.811}], "confidence": {"mean_correct": 0.914, "mean_wrong": 0.621, "thresholds": [{"min_conf": 0.5, "coverage": 0.892, "accuracy": 0.856}, {"min_conf": 0.7, "coverage": 0.78, "accuracy": 0.904}, {"min_conf": 0.9, "coverage": 0.656, "accuracy": 0.97}]}, "marker_doc_freq_pct_train": {"\u0627\u064a\u0647": {"EGY": 11.0, "GLF": 0.0, "LAV": 0.0, "MSA": 0.0, "NOR": 0.0}, "\u0639\u0627\u064a\u0632": {"EGY": 3.2, "GLF": 0.1, "LAV": 0.2, "MSA": 0.1, "NOR": 0.2}, "\u0645\u0634": {"EGY": 23.4, "GLF": 3.1, "LAV": 6.8, "MSA": 0.6, "NOR": 11.3}, "\u0634\u0648": {"EGY": 0.2, "GLF": 1.7, "LAV": 4.6, "MSA": 0.1, "NOR": 2.7}, "\u0647\u064a\u0643": {"EGY": 0.0, "GLF": 0.7, "LAV": 5.8, "MSA": 0.0, "NOR": 1.2}, "\u0628\u062f\u064a": {"EGY": 0.0, "GLF": 0.2, "LAV": 3.8, "MSA": 0.1, "NOR": 0.8}, "\u0628\u0631\u0634\u0627": {"EGY": 0.0, "GLF": 0.0, "LAV": 0.0, "MSA": 0.0, "NOR": 1.2}, "\u0627\u0644\u062d\u064a\u0646": {"EGY": 0.0, "GLF": 1.1, "LAV": 0.2, "MSA": 0.0, "NOR": 0.2}, "\u064a\u0639\u0646\u064a": {"EGY": 3.0, "GLF": 30.1, "LAV": 28.7, "MSA": 14.0, "NOR": 19.3}, "\u0627\u0644\u0644\u064a": {"EGY": 9.2, "GLF": 19.6, "LAV": 17.3, "MSA": 1.4, "NOR": 17.1}}, "label_noise": {"train_sentences_with_multiple_labels": 30, "test_sentences_in_train": 28, "test_in_train_label_conflict": 7}}};
+const MODEL_ID = "pavithrabinu115/arabert-arabic-dialect-id";
+const NAMES = {EGY:"Egyptian",GLF:"Gulf",LAV:"Levantine",NOR:"North African / Tunisian",MSA:"Modern Standard Arabic"};
+const EXAMPLES = ["ازيك يا صاحبي عامل ايه النهارده؟","شلونك؟ وش تسوي اليوم؟","كيفك؟ شو عم تعمل هلق؟","شنوة حوالك؟ لاباس عليك؟","أعلنت الحكومة اليوم عن خطة جديدة لتطوير التعليم."];
+const $ = id => document.getElementById(id);
+
+// stats + tabs
+const best = M.eval.reduce((a,b)=>b.f1>a.f1?b:a);
+$("stats").innerHTML = [["Test accuracy",M.test.test_accuracy],["Test macro-F1",M.test.test_macro_f1],["Best dev macro-F1",best.f1]]
+  .map(([k,v])=>`<div class="stat"><b>${v.toFixed(3)}</b><span>${k}</span></div>`).join("");
+document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{
+  document.querySelectorAll(".tabs button").forEach(x=>x.setAttribute("aria-selected",x===b));
+  $("try").hidden = b.dataset.tab!=="try"; $("metrics").hidden = b.dataset.tab!=="metrics";
+});
+
+// charts (tiny inline SVG)
+function chart(el, series, yMin, yMax){
+  const W=420,H=220,L=40,R=10,T=10,B=28, xs=series.flatMap(s=>s.pts.map(p=>p[0]));
+  const x0=Math.min(...xs),x1=Math.max(...xs), X=v=>L+(v-x0)/(x1-x0||1)*(W-L-R), Y=v=>T+(1-(v-yMin)/(yMax-yMin))*(H-T-B);
+  let g=""; for(let i=0;i<=4;i++){const v=yMin+(yMax-yMin)*i/4; g+=`<line x1="${L}" x2="${W-R}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--line)"/><text x="${L-6}" y="${Y(v)+4}" text-anchor="end">${v.toFixed(2)}</text>`;}
+  g+=`<text x="${W-R}" y="${H-8}" text-anchor="end">step</text><text x="${L}" y="${H-8}">${x0}</text>`;
+  for(const s of series){ g+=`<polyline fill="none" stroke="${s.color}" stroke-width="2" points="${s.pts.map(p=>X(p[0])+","+Y(p[1])).join(" ")}"/>`;
+    if(s.dots) g+=s.pts.map(p=>`<circle cx="${X(p[0])}" cy="${Y(p[1])}" r="3.5" fill="${s.color}"><title>step ${p[0]}: ${p[1].toFixed(3)}</title></circle>`).join(""); }
+  el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" width="100%" role="img">${g}</svg>`;
+}
+const lossMax = Math.ceil(Math.max(...M.train.map(d=>d.loss))*10)/10;
+chart($("lossChart"), [{color:"var(--accent)", pts:M.train.map(d=>[d.step,d.loss])}], 0, lossMax);
+const lo = Math.floor(Math.min(...M.eval.map(e=>Math.min(e.acc,e.f1)))*20)/20;
+chart($("evalChart"), [{color:"var(--accent)",dots:1,pts:M.eval.map(e=>[e.step,e.acc])},{color:"var(--warn)",dots:1,pts:M.eval.map(e=>[e.step,e.f1])}], lo, 1);
+
+// tables
+const A = M.analysis, MC = A.most_confused_with;
+const byF1 = [...M.labels].sort((a,b)=>M.report[b]["f1-score"]-M.report[a]["f1-score"]);
+$("cls").innerHTML = "<tr><th>Dialect</th><th>F1</th><th>Precision</th><th>Recall</th><th>Support</th><th>Most often confused with</th></tr>" +
+  byF1.map(l=>{const r=M.report[l], m=MC[l];
+    const c = l==="EGY" ? "almost never (2 of 407)" : `${m.label} · ${m.count} (${(m.share_of_class*100).toFixed(0)}%)`;
+    return `<tr><td>${l} · ${NAMES[l]}</td><td><b>${r["f1-score"].toFixed(3)}</b></td><td>${r.precision.toFixed(3)}</td><td>${r.recall.toFixed(3)}</td><td>${r.support}</td><td>${c}</td></tr>`}).join("");
+$("cm").innerHTML = "<tr><th>true \\ pred</th>"+M.labels.map(l=>`<th>${l}</th>`).join("")+"<th>total</th></tr>"+
+  M.cm.map((row,i)=>{const tot=row.reduce((a,b)=>a+b,0);
+    return `<tr><td><b>${M.labels[i]}</b></td>`+row.map((c,j)=>{const p=c/tot;
+      const st = i===j ? "font-weight:700;color:var(--accent)" : (p>=0.02 ? `background:color-mix(in srgb, var(--warn) ${Math.round(Math.min(p/0.25,1)*45)}%, transparent)` : "");
+      return `<td class="cmc" style="${st}">${c}${i!==j&&c>=5?`<small>${(p*100).toFixed(0)}%</small>`:""}</td>`}).join("")+`<td>${tot}</td></tr>`}).join("");
+const P2 = Object.fromEntries(A.pairs.map(p=>[p.a+p.b,p])), lb=A.accuracy_by_length, th=Object.fromEntries(A.confidence.thresholds.map(t=>[t.min_conf,t]));
+const shortN = lb[0].n_all+lb[1].n_all, ln=A.label_noise;
+$("why").innerHTML = [
+ ["Most errors are inside the Gulf / Levantine / North African triangle",
+  `<p>${A.triangle_GLF_LAV_NOR_errors} of the ${A.errors} test errors (${Math.round(100*A.triangle_GLF_LAV_NOR_errors/A.errors)}%) are mix-ups among GLF, LAV and NOR:
+   GLF↔LAV ${P2.GLFLAV.total}, GLF↔NOR ${P2.GLFNOR.total}, LAV↔NOR ${P2.LAVNOR.total}. Next is Levantine predicted as MSA (${P2.LAVMSA.a_as_b}).
+   Egyptian is almost never confused (405/407).</p>`],
+ ["Egyptian has distinctive, frequent markers; the others share theirs",
+  `<p>In training, <span class="ar">ايه</span> ("what") appears in ${A.marker_doc_freq_pct_train["ايه"].EGY}% of Egyptian sentences and essentially nowhere else.
+   Levantine <span class="ar">شو</span> ("what") is also used in NOR (${A.marker_doc_freq_pct_train["شو"].NOR}%) and GLF (${A.marker_doc_freq_pct_train["شو"].GLF}%),
+   and the most common dialect words, <span class="ar">يعني</span> ("I mean") and <span class="ar">اللي</span> ("which"), occur at similar rates in all three.</p>`],
+ ["Short sentences carry little evidence",
+  `<p>Sentences under 10 words are ${Math.round(100*shortN/A.n_test)}% of the test set but ${A.errors_under_10_words} of the ${A.errors} errors.
+   Excluding Egyptian, accuracy is ${lb.map(b=>`${b.acc_non_egy.toFixed(2)} for ${b.words} words`).join(", ")}.
+   Some contain no dialect word at all, e.g. <span class="ar">«في العمق»</span> ("in depth", labelled LAV, predicted NOR).</p>`],
+ ["Code-switching pulls dialect towards MSA",
+  `<p>The texts are reader comments on news articles, and writers often mix dialect with MSA. Long, mostly-MSA comments with a word or two
+   of dialect (e.g. <span class="ar">بس</span>, "but") get predicted as MSA, which mostly hits Levantine (${P2.LAVMSA.a_as_b} cases), as the dataset paper also found.</p>`],
+ ["Some labels are noisy",
+  `<p>${ln.train_sentences_with_multiple_labels} training sentences appear with more than one label, and ${ln.test_in_train_label_conflict} of the ${ln.test_sentences_in_train}
+   test sentences that also occur in training carry a different label there.</p>`],
+ ["Tip: trust high-confidence predictions",
+  `<p>Mean confidence is ${A.confidence.mean_correct.toFixed(2)} when right vs ${A.confidence.mean_wrong.toFixed(2)} when wrong.
+   Predictions with probability ≥ 0.9 cover ${Math.round(th[0.9].coverage*100)}% of the test set at ${(th[0.9].accuracy*100).toFixed(1)}% accuracy.</p>`],
+].map(([h,b])=>`<div class="card"><h3>${h}</h3>${b}</div>`).join("");
+
+// model
+$("ex").innerHTML = EXAMPLES.map(e=>`<button>${e}</button>`).join("");
+$("ex").querySelectorAll("button").forEach(b=>b.onclick=()=>{$("txt").value=b.textContent; run();});
+let clf;
+async function run(){
+  const t=$("txt").value.trim(); if(!t||!clf) return;
+  $("go").disabled=true; $("status").textContent="Classifying…";
+  try{
+    const res = await clf(t,{top_k:5});
+    $("out").innerHTML = res.map((p,i)=>`<div class="row ${i===0?'top':''}"><div class="lbl"><span>${NAMES[p.label]||p.label} (${p.label})</span><span>${(p.score*100).toFixed(1)}%</span></div><div class="track"><div class="fill" style="width:${(p.score*100).toFixed(1)}%"></div></div></div>`).join("");
+    $("status").textContent = res[0].score < 0.7 ? "Ready. Low confidence: this sentence is ambiguous between dialects." : "Ready.";
+  }catch(e){ $("status").textContent="Error: "+e.message; }
+  $("go").disabled=false;
+}
+$("go").onclick=run;
+$("txt").addEventListener("keydown",e=>{if(e.key==="Enter"&&(e.metaKey||e.ctrlKey)) run();});
+try{
+  const { pipeline } = await import("https://cdn.jsdelivr.net/npm/@huggingface/transformers@4.3.2");
+  clf = await pipeline("text-classification", MODEL_ID, { dtype: "q8" });
+  $("go").disabled=false; $("status").textContent="Ready. (Ctrl/⌘+Enter to classify)";
+}catch(e){ $("status").textContent="Could not load the model: "+e.message; console.error(e); }
+</script>
+</body>
+</html>

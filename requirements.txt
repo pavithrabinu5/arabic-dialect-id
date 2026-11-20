@@ -1,0 +1,11 @@
+# Versions used for the published run (Python 3.14, Apple M4 / MPS)
+torch==2.15.0
+transformers==5.23.0
+accelerate==1.16.0
+datasets==5.2.0
+scikit-learn==1.9.1
+trackio==0.45.1
+huggingface_hub==2.4.0
+# only needed to export the browser (ONNX) model
+onnx==1.23.2
+onnxruntime==1.32.0
